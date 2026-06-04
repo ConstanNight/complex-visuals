@@ -1,5 +1,7 @@
 package org.example;
 
+import org.example.math.Analysis;
+import org.example.math.ShapeType;
 import org.jzy3d.chart.Chart;
 
 import javax.swing.*;
@@ -26,7 +28,7 @@ public class AppWindow {
         frame.setResizable(true);
         frame.setLocationRelativeTo(null);
 
-        Analysis a = new Analysis(3,100);
+        Analysis a = new Analysis(ShapeType.SPHERE, 3,100);
         Chart chart = a.getChart();
 
         // Create Layered Pane
@@ -41,7 +43,7 @@ public class AppWindow {
         title.setFont(new Font("Arial", Font.BOLD, 18));
         controlPanel = PanelFactory.createPanel(title, a);
         controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
-        controlPanel.setBounds(20, 20, 250, 200);
+        controlPanel.setBounds(20, 20, 250, 300);
 
         layeredPane.add(controlPanel, JLayeredPane.PALETTE_LAYER);
 

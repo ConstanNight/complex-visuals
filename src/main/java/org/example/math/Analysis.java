@@ -1,4 +1,4 @@
-package org.example;
+package org.example.math;
 
 import org.jzy3d.chart.Chart;
 import org.jzy3d.chart.factories.AWTChartFactory;
@@ -9,35 +9,40 @@ import java.awt.event.MouseWheelListener;
 
 public class Analysis {
     private Chart chart;
-    private RiemannSphere sphere;
-    private double bounds;
-    private int steps;
-    private boolean showWireframe;
+    private MathSurface currentSurface;
 
-    public Analysis(double bounds, int steps) {
-        this.bounds = bounds;
-        this.steps = steps;
-        sphere = new RiemannSphere(bounds, steps);
+    public Analysis(ShapeType shape, double size, int rez) {
+
+        currentSurface = switch (shape) {
+            case SPHERE -> new RiemannSphere(size, rez);
+            default -> null; // This should never happen!
+        };
+
         chart = new AWTChartFactory().newChart();
-
         chart.setAxeDisplayed(false);
         chart.getView().setBoundMode(ViewBoundMode.MANUAL);
-        chart.getScene().getGraph().add(sphere);
+        chart.getScene().getGraph().add(currentSurface.getShape());
         addMouse();
     }
 
     public void setWireframeDisplayed(boolean status) {
-        showWireframe = status;
-        sphere.setWireframeDisplayed(status);
-        chart.render();  // Force the 3D chart to redraw when clicked
+        currentSurface.setWireframe(status);
+        chart.render(); // Force the 3D chart to redraw when clicked
     }
 
-    public void updateResolution(int steps) {
-        chart.getScene().getGraph().remove(sphere);
-        sphere = new RiemannSphere(bounds,steps);
-        sphere.setWireframeDisplayed(showWireframe);
-        chart.getScene().getGraph().add(sphere);
+    public void update(double size, int rez) {
+        chart.getScene().getGraph().remove(currentSurface.getShape());  // Remove the current shape
+        currentSurface.update(size, rez);                  // Create a new shape
+        chart.getScene().getGraph().add(currentSurface.getShape());     // Add the new shape
         chart.render();
+    }
+
+    public void updateResolution(int subDivisions) {
+        update(currentSurface.getSize(), subDivisions);
+    }
+
+    public void updateSize(int size) {
+        update(size, currentSurface.getResolution());
     }
 
     private void addMouse() {
@@ -64,7 +69,7 @@ public class Analysis {
     public Chart getChart() {
         return chart;
     }
-    public RiemannSphere getSphere() {
-        return sphere;
+    public MathSurface getSurface() {
+        return currentSurface;
     }
 }

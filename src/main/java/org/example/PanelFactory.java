@@ -1,10 +1,15 @@
 package org.example;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.example.math.Analysis;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.Function;
+import java.util.function.IntConsumer;
 
 public class PanelFactory{
-    public static JPanel createPanel(JLabel label, Analysis a) {
+    public static @NonNull JPanel createPanel(JLabel label, Analysis a) {
         JPanel panel =  new JPanel();
 
         panel.add(label);
@@ -29,27 +34,51 @@ public class PanelFactory{
         });
         panel.add(wireframeBox);
 
+        // Add Resolution Slider
         panel.add(Box.createRigidArea(new Dimension(0, 20))); // Spacer
-
-        // Adds Slider: {Min: 10, Max: 200, Default: 100}
         panel.add(new JLabel("Mesh Resolution:"));
-        JSlider resolutionSlider = new JSlider(JSlider.HORIZONTAL, 0, 200, 100);
-        resolutionSlider.setMajorTickSpacing(50);
-        resolutionSlider.setMinorTickSpacing(10);
+        JSlider resolutionSlider = buildSlider(a, SliderType.REZ, 50, 200);
+        panel.add(resolutionSlider);
+
+        // Add Size Slider
+        panel.add(Box.createRigidArea(new Dimension(0, 20))); // Spacer
+        panel.add(new JLabel("Plane Size:"));
+        JSlider sizeSlider = buildSlider(a, SliderType.SIZE, 1, 10);
+        panel.add(sizeSlider);
+
+        return panel;
+    }
+
+    // TODO: Create a method for finding nice tick spacing. Could use smallest divisors of max-min
+    private static @NonNull JSlider buildSlider(Analysis a, SliderType type, int min, int max) {
+        int defaultValue;
+        IntConsumer update;
+        switch (type) {
+            case REZ:
+                defaultValue = a.getSurface().getResolution();
+                update = a::updateResolution;
+                break;
+            case SIZE:
+                defaultValue = (int) a.getSurface().getSize();
+                update = a::updateSize;
+                break;
+            default: // This should never happen!
+                update = null;
+                defaultValue = 0;
+        }
+        JSlider resolutionSlider = new JSlider(JSlider.HORIZONTAL, min, max, defaultValue);
+        resolutionSlider.setMajorTickSpacing((max-min)/3);
+        //resolutionSlider.setMinorTickSpacing((max-min)/9); // Doesn't look pretty enough
         resolutionSlider.setPaintTicks(true);
         resolutionSlider.setPaintLabels(true);
         resolutionSlider.setOpaque(false);
 
         resolutionSlider.addChangeListener(e -> {
             // Only update the 3D model when the user STOPS dragging.
-            // If we update on every single pixel drag, the app will freeze.
             if (!resolutionSlider.getValueIsAdjusting()) {
-                a.updateResolution(resolutionSlider.getValue());
+                update.accept(resolutionSlider.getValue());
             }
         });
-        panel.add(resolutionSlider);
-
-
-        return panel;
+        return resolutionSlider;
     }
 }
