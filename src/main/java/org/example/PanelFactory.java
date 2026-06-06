@@ -25,7 +25,7 @@ public class PanelFactory{
         // Adds CheckBox
         JCheckBox wireframeBox;
         {
-            boolean defaultValue = true;
+            boolean defaultValue = false;
             wireframeBox = new JCheckBox("Show Wireframe Grid", defaultValue);
             a.setWireframeDisplayed(defaultValue);
         }
@@ -42,8 +42,8 @@ public class PanelFactory{
 
         // Add Size Slider
         panel.add(Box.createRigidArea(new Dimension(0, 20))); // Spacer
-        panel.add(new JLabel("Plane Size:"));
-        JSlider sizeSlider = buildSlider(a, SliderType.SIZE, 1, 10);
+        panel.add(new JLabel("Plane Percentage:"));
+        JSlider sizeSlider = buildSlider(a, SliderType.SIZE, 0, 100);
         panel.add(sizeSlider);
 
         return panel;

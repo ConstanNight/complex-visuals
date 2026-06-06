@@ -28,7 +28,7 @@ public class AppWindow {
         frame.setResizable(true);
         frame.setLocationRelativeTo(null);
 
-        Analysis a = new Analysis(ShapeType.SPHERE, 3,100);
+        Analysis a = new Analysis(ShapeType.SPHERE, 100,100);
         Chart chart = a.getChart();
 
         // Create Layered Pane
