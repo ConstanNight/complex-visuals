@@ -2,14 +2,12 @@ package org.example;
 
 import org.example.math.Analysis;
 import org.example.math.ShapeType;
-import org.jzy3d.chart.Chart;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class AppWindow {
     private JFrame frame;
-    private JPanel controlPanel;
     private String title;
     private int width;
     private int height;
@@ -28,36 +26,43 @@ public class AppWindow {
         frame.setResizable(true);
         frame.setLocationRelativeTo(null);
 
+        frame.add(buildLayeredPane(), BorderLayout.CENTER);
+
+        frame.setVisible(true);
+    }
+
+    public JLayeredPane buildLayeredPane() {
+        // Riemann sphere object
         Analysis a = new Analysis(ShapeType.SPHERE, 100,100);
-        Chart chart = a.getChart();
+        Component canvas = (Component) a.getChart().getCanvas();
 
         // Create Layered Pane
         JLayeredPane layeredPane = new JLayeredPane();
-        frame.add(layeredPane, BorderLayout.CENTER);
 
-        // Add canvas layer
-        layeredPane.add((Component) chart.getCanvas(), JLayeredPane.DEFAULT_LAYER);
+        // Add canvas of sphere
+        layeredPane.add(canvas, JLayeredPane.DEFAULT_LAYER);
 
-        // Create control panel
-        JLabel title = new JLabel("Visual Controls");
-        title.setFont(new Font("Arial", Font.BOLD, 18));
-        controlPanel = PanelFactory.createPanel(title, a);
-        controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
-        controlPanel.setBounds(20, 20, 250, 300);
+        // Add control panel
+        layeredPane.add(buildControlPanel(a), JLayeredPane.PALETTE_LAYER);
 
-        layeredPane.add(controlPanel, JLayeredPane.PALETTE_LAYER);
-
+        // Resizes the canvas along with the pane
         layeredPane.addComponentListener(new java.awt.event.ComponentAdapter() {
             @Override
             public void componentResized(java.awt.event.ComponentEvent e) {
-                int w = layeredPane.getWidth();
-                int h = layeredPane.getHeight();
-
-                // Stretch the 3D canvas to fill the entire window
-                ((Component) chart.getCanvas()).setBounds(0, 0, w, h);
+                canvas.setBounds(0, 0, layeredPane.getWidth(), layeredPane.getHeight());
             }
         });
 
-        frame.setVisible(true);
+        return layeredPane;
+    }
+
+    public JPanel buildControlPanel(Analysis a) {
+        JLabel title = new JLabel("Visual Controls");
+        title.setFont(new Font("Arial", Font.BOLD, 18));
+        JPanel controlPanel = PanelFactory.buildControls(title, a);
+
+        controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
+        controlPanel.setBounds(20, 20, 250, 300);
+        return controlPanel;
     }
 }

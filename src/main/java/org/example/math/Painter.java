@@ -7,7 +7,6 @@ public class Painter {
     public static Color getColorForValue(Complex z) {
         // Get hue
         float hue = (float) (z.arg() / CMath.TAU);
-        System.out.println(hue);
 
         // mappedMag will be 0 at origin, 1 at magnitude 1, and approach 2 at infinity
         double mappedMag = 4 * Math.atan(z.abs()) / Math.PI;

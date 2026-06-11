@@ -5,21 +5,26 @@ import org.example.math.Analysis;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.function.Function;
 import java.util.function.IntConsumer;
 
 public class PanelFactory{
-    public static @NonNull JPanel createPanel(JLabel label, Analysis a) {
-        JPanel panel =  new JPanel();
-
+    public static @NonNull JPanel buildControls(JLabel label, Analysis a) {
+        JPanel panel =  new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                //g.setColor(new Color(240, 240, 240, 220));
+                g.setColor(getBackground());
+                g.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+        panel.setOpaque(false);
         panel.add(label);
 
-        panel.setBackground(new Color(240, 240, 240, 220));
         panel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(Color.GRAY, 1),
                 BorderFactory.createEmptyBorder(15, 15, 15, 15)
         ));
-
         panel.add(Box.createRigidArea(new Dimension(0, 15))); // Spacer
 
         // Adds CheckBox
@@ -27,6 +32,7 @@ public class PanelFactory{
         {
             boolean defaultValue = false;
             wireframeBox = new JCheckBox("Show Wireframe Grid", defaultValue);
+            wireframeBox.setOpaque(false);
             a.setWireframeDisplayed(defaultValue);
         }
         wireframeBox.addActionListener(e -> {
@@ -63,8 +69,7 @@ public class PanelFactory{
                 update = a::updateSize;
                 break;
             default: // This should never happen!
-                update = null;
-                defaultValue = 0;
+                throw new IllegalArgumentException("Unsupported SliderType: " + type);
         }
         JSlider resolutionSlider = new JSlider(JSlider.HORIZONTAL, min, max, defaultValue);
         resolutionSlider.setMajorTickSpacing((max-min)/3);
