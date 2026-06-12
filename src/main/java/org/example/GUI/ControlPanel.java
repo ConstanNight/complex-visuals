@@ -5,21 +5,12 @@ import org.example.math.Analysis;
 import javax.swing.*;
 import java.awt.*;
 
-public class ControlPanel extends JPanel {
+public class ControlPanel extends TranslucentPanel {
 
     public ControlPanel(Analysis a) {
         super();
-        // Sets translucent, using the overwritten paint component
-        setOpaque(false);
-        setBackground(new Color(220, 220, 220, 200));
-
-        // Sets the panel's overall look
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBounds(20, 20, 250, 280);
-        setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.GRAY, 1),
-                BorderFactory.createEmptyBorder(15, 15, 15, 15)
-        ));
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         buildComponents(a);
     }
@@ -29,11 +20,11 @@ public class ControlPanel extends JPanel {
         JLabel title = new JLabel("Visual Controls");
         title.setFont(new Font("Arial", Font.BOLD, 18));
         title.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+        title.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0)); // Bottom padding
+
         add(title);
 
         DragFunct.makeDraggable(this, title);
-
-        add(Box.createRigidArea(new Dimension(0, 15)),1); // Spacer
 
         addCheckBoxes(a);
 
@@ -64,12 +55,5 @@ public class ControlPanel extends JPanel {
         add(Box.createRigidArea(new Dimension(0, 20))); // Spacer
         add(new JLabel("Plane Percentage:"));
         add(new ControlSlider(a, SliderType.SIZE, 0, 100));
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.setColor(getBackground());
-        g.fillRect(0, 0, getWidth(), getHeight());
     }
 }

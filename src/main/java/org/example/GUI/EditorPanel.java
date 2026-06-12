@@ -1,0 +1,52 @@
+package org.example.GUI;
+
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import java.awt.*;
+
+public class EditorPanel extends TranslucentPanel {
+    private JTextArea textArea;
+    private JLabel previewArea;
+
+    public EditorPanel() {
+        super();
+        setBounds(280, 20, 300, 400);
+        setLayout(new BorderLayout());
+
+        buildComponents();
+    }
+
+    private void buildComponents() {
+        // Build the label of the panel
+        JLabel title = new JLabel("Latex Editor");
+        title.setFont(new Font("Arial", Font.BOLD, 18));
+        title.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+        title.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0)); // Bottom padding
+
+        add(title, BorderLayout.NORTH);
+
+        DragFunct.makeDraggable(this, title);
+
+        // Build the text area
+        textArea = new JTextArea("\\exp{z}");
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        textArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+
+        // Build the preview area
+        previewArea = new JLabel();
+        previewArea.setHorizontalAlignment(SwingConstants.CENTER);
+        previewArea.setOpaque(true);
+        previewArea.setBackground(Color.WHITE);
+
+        // Build split pane
+        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, new JScrollPane(textArea), new JScrollPane(previewArea));
+        splitPane.setDividerLocation(150); // Initial height of text area
+
+        add(splitPane, BorderLayout.CENTER);
+
+        // TODO: Add Document Listener
+        textArea.getDocument().addDocumentListener(null);
+    }
+}

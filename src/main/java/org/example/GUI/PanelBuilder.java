@@ -7,24 +7,16 @@ import javax.swing.*;
 import java.awt.*;
 
 public class PanelBuilder{
-
     public static JLayeredPane buildLayeredPane() {
         // Riemann sphere object
         Analysis a = new Analysis(ShapeType.SPHERE, 100,100);
         Component canvas = (Component) a.getChart().getCanvas();
 
-        // Create Layered Pane
+        // Build Layered Pane
         JLayeredPane layeredPane = new JLayeredPane();
-
-        // Add canvas of sphere
-        layeredPane.add(canvas, JLayeredPane.DEFAULT_LAYER);
-
-        // Add control panel
-        layeredPane.add(new ControlPanel(a), JLayeredPane.PALETTE_LAYER);
-        // Add control panel
-        layeredPane.add(new ControlPanel(a), JLayeredPane.PALETTE_LAYER);
-        // Add control panel
-        layeredPane.add(new ControlPanel(a), JLayeredPane.PALETTE_LAYER);
+        layeredPane.add(canvas, JLayeredPane.DEFAULT_LAYER);                // Add: analysis canvas
+        layeredPane.add(new ControlPanel(a), JLayeredPane.PALETTE_LAYER);   // Add: control panel
+        layeredPane.add(new EditorPanel(), JLayeredPane.PALETTE_LAYER);     // Add: text editor
 
         // Resizes the canvas along with the pane
         layeredPane.addComponentListener(new java.awt.event.ComponentAdapter() {
