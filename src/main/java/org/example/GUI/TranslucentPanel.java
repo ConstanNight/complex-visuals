@@ -5,14 +5,21 @@ import java.awt.*;
 
 public class TranslucentPanel extends JPanel {
 
-    public static final Color DEFAULT_BG_COLOR = new Color(220, 220, 220, 200);
+    private static final int ALPHA = 200;
+    public static final Color DEFAULT_BG_COLOR = new Color(220, 220, 220, ALPHA);
 
     public TranslucentPanel() {
         super();
 
+
+        Color themeBg = UIManager.getColor("Panel.background");
+
         // Sets translucent, using the overwritten paint component
         setOpaque(false);
-        setBackground(DEFAULT_BG_COLOR);
+        if (themeBg != null)
+            setBackground(new Color(themeBg.getRed(), themeBg.getGreen(), themeBg.getBlue(), ALPHA));
+        else
+            setBackground(DEFAULT_BG_COLOR);
 
         // Sets a thin gray border along with an empty space
         setBorder(BorderFactory.createCompoundBorder(

@@ -1,4 +1,4 @@
-package org.example.math;
+package org.example.standby;
 
 public class CMath {
     public static final double TAU = 2 * Math.PI;
@@ -8,11 +8,11 @@ public class CMath {
     }
 
     public static Complex scale(Complex z, double s) {
-        return Complex.fromPolar(z.abs()*s, z.arg());
+        return Complex.fromPolar(z.dabs()*s, z.arg());
     }
 
     public static Complex inverse(Complex z) {
-        return Complex.fromPolar(1/z.abs(), -z.arg());
+        return Complex.fromPolar(1/z.dabs(), -z.arg());
     }
 
     public static Complex sum(Complex a, Complex b) {

@@ -1,11 +1,12 @@
 package org.example.math;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jzy3d.colors.Color;
 import org.jzy3d.maths.Coord3d;
 import org.jzy3d.plot3d.primitives.Point;
 import org.jzy3d.plot3d.primitives.Polygon;
 import org.jzy3d.plot3d.primitives.Shape;
+import org.matheclipse.core.expression.ComplexNum;
+import org.matheclipse.core.interfaces.IComplexNum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,7 @@ public class RiemannSphere implements MathSurface{
         this.rez = rez;
     }
 
-    private static @NonNull Shape buildShape(double size, int rez) throws RuntimeException {
+    private static Shape buildShape(double size, int rez) throws RuntimeException {
         if (size < 0 || size > 100)
             throw new RuntimeException("Size must be between 0 and 100!");
 
@@ -63,13 +64,15 @@ public class RiemannSphere implements MathSurface{
         double z = -Math.cos(phi);
         Coord3d coord = new Coord3d(x, y, z);
 
+        double real = Math.tan(phi / 2.0) * Math.cos(theta);
+        double imag = Math.tan(phi / 2.0) * Math.sin(theta);
         // Find the appropriate color
-        Complex w = CMath.exp(Complex.fromPolar(Math.tan(phi / 2.0), theta)) ;
+        IComplexNum w = ComplexNum.valueOf(real,imag).exp();
 
         return new Point(coord, Painter.getColorForValue(w));
     }
 
-    private static @NonNull Shape getStereoProj(double size, int rez) throws RuntimeException {
+    private static Shape getStereoProj(double size, int rez) throws RuntimeException {
 
         if (size < 0)
             throw new RuntimeException("Size can't be negative!");

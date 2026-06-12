@@ -1,5 +1,7 @@
 package org.example.GUI;
 
+import org.example.AppWindow;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,7 +11,7 @@ public class EditorPanel extends TranslucentPanel {
 
     public EditorPanel() {
         super();
-        setBounds(280, 20, 300, 400);
+        setBounds(20, 320, 300, 400);
         setLayout(new BorderLayout());
 
         buildComponents();
@@ -36,7 +38,11 @@ public class EditorPanel extends TranslucentPanel {
         previewArea = new JLabel();
         previewArea.setHorizontalAlignment(SwingConstants.CENTER);
         previewArea.setOpaque(true);
-        previewArea.setBackground(Color.WHITE);
+
+        if(AppWindow.darkMode)
+            previewArea.setBackground(new Color(40, 40, 40));
+        else
+            previewArea.setBackground(Color.WHITE);
 
         // Build split pane
         JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, new JScrollPane(textArea), new JScrollPane(previewArea));

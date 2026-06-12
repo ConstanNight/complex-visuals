@@ -1,4 +1,4 @@
-package org.example.math;
+package org.example.standby;
 
 public class Complex extends Number{
     private double real, imag;
@@ -67,7 +67,7 @@ public class Complex extends Number{
     }
 
     public String toString() {
-        return real + ((imag < 0) ? "" : "+") + imag + 'i';
+        return "(" + real + ((imag < 0) ? "" : "+") + imag + "I)";
     }
 
     public double real() {
@@ -78,7 +78,7 @@ public class Complex extends Number{
         return imag;
     }
 
-    public double abs() {
+    public double dabs() {
         return abs;
     }
 

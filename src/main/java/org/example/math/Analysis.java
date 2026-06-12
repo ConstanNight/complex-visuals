@@ -4,6 +4,7 @@ import org.jzy3d.chart.Chart;
 import org.jzy3d.chart.factories.AWTChartFactory;
 import org.jzy3d.plot3d.rendering.view.modes.ViewBoundMode;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseWheelListener;
 
@@ -22,6 +23,17 @@ public class Analysis {
         chart.setAxeDisplayed(false);
         chart.getView().setBoundMode(ViewBoundMode.MANUAL);
         chart.getScene().getGraph().add(currentSurface.getShape());
+
+        Color themeBg = UIManager.getColor("Panel.background");
+
+        org.jzy3d.colors.Color jzyBgColor = new org.jzy3d.colors.Color(
+                themeBg.getRed(),
+                themeBg.getGreen(),
+                themeBg.getBlue()
+        );
+
+        chart.getView().setBackgroundColor(jzyBgColor);
+
         addMouse();
     }
 

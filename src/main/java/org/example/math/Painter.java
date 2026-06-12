@@ -1,15 +1,22 @@
 package org.example.math;
 
 import org.jzy3d.colors.Color;
+import org.matheclipse.core.interfaces.IComplexNum;
 
 public class Painter {
 
-    public static Color getColorForValue(Complex z) {
-        // Get hue
-        float hue = (float) (z.arg() / CMath.TAU);
+    public static Color getColorForValue(IComplexNum z) {
+        // Get hue using the angle of z
+        double angle = Math.atan2(z.getImaginaryPart(), z.getRealPart());
+        float hue = (float) ((angle + Math.PI) / (2.0 * Math.PI));
+        hue-=0.5f; // FIX: Seems to fix the floating point value problem for now
+
+        // Original fix
+        //float hue = 0.5f * (float) (angle / Math.PI);
+        //++hue; --hue;
 
         // mappedMag will be 0 at origin, 1 at magnitude 1, and approach 2 at infinity
-        double mappedMag = 4 * Math.atan(z.abs()) / Math.PI;
+        double mappedMag = 4 * Math.atan(z.dabs()) / Math.PI;
 
         float saturation;
         float brightness;
