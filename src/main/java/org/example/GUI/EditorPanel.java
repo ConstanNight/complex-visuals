@@ -1,8 +1,6 @@
 package org.example.GUI;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 
 public class EditorPanel extends TranslucentPanel {
@@ -42,11 +40,11 @@ public class EditorPanel extends TranslucentPanel {
 
         // Build split pane
         JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, new JScrollPane(textArea), new JScrollPane(previewArea));
-        splitPane.setDividerLocation(150); // Initial height of text area
+        splitPane.setDividerLocation(150);
 
         add(splitPane, BorderLayout.CENTER);
 
-        // TODO: Add Document Listener
-        textArea.getDocument().addDocumentListener(null);
+        // Add Document Listener
+        textArea.getDocument().addDocumentListener(new LatexRenderer(textArea, previewArea));
     }
 }
