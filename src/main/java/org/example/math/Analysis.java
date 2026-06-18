@@ -12,10 +12,10 @@ public class Analysis {
     private Chart chart;
     private MathSurface currentSurface;
 
-    public Analysis(ShapeType shape, double size, int rez) {
+    public Analysis(ShapeType shape, String map, double size, int rez) {
 
         currentSurface = switch (shape) {
-            case SPHERE -> new RiemannSphere(size, rez);
+            case SPHERE -> new RiemannSphere(map, size, rez);
             default -> null; // This should never happen!
         };
 
@@ -42,19 +42,23 @@ public class Analysis {
         chart.render(); // Force the 3D chart to redraw when clicked
     }
 
-    public void update(double size, int rez) {
+    private void update(String map, double size, int rez) {
         chart.getScene().getGraph().remove(currentSurface.getShape());  // Remove the current shape
-        currentSurface.update(size, rez);                  // Create a new shape
+        currentSurface.update(map, size, rez);                  // Create a new shape
         chart.getScene().getGraph().add(currentSurface.getShape());     // Add the new shape
         chart.render();
     }
 
+    public void updateMap(String map) {
+        update(map, currentSurface.getSize(), currentSurface.getResolution());
+    }
+
     public void updateResolution(int subDivisions) {
-        update(currentSurface.getSize(), subDivisions);
+        update(currentSurface.getMap(), currentSurface.getSize(), subDivisions);
     }
 
     public void updateSize(int size) {
-        update(size, currentSurface.getResolution());
+        update(currentSurface.getMap(), size, currentSurface.getResolution());
     }
 
     private void addMouse() {

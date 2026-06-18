@@ -1,23 +1,26 @@
 package org.example.GUI;
 
 import org.example.AppWindow;
+import org.example.math.Analysis;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 
 public class EditorPanel extends TranslucentPanel {
     private JTextArea textArea;
     private JLabel previewArea;
 
-    public EditorPanel() {
+    public EditorPanel(Analysis a) {
         super();
         setBounds(20, 320, 300, 400);
         setLayout(new BorderLayout());
 
-        buildComponents();
+        buildComponents(a);
     }
 
-    private void buildComponents() {
+    private void buildComponents(Analysis a) {
         // Build the label of the panel
         JLabel title = new JLabel("Latex Editor");
         title.setFont(new Font("Arial", Font.BOLD, 18));
@@ -52,5 +55,23 @@ public class EditorPanel extends TranslucentPanel {
 
         // Add Document Listener
         textArea.getDocument().addDocumentListener(new LatexRenderer(textArea, previewArea));
+
+        // TODO: Update only for valid previews, otherwise the lag is unendurable
+        textArea.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                a.updateMap(textArea.getText());
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                a.updateMap(textArea.getText());
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                a.updateMap(textArea.getText());
+            }
+        });
     }
 }

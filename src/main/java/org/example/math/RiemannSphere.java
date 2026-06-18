@@ -6,7 +6,6 @@ import org.jzy3d.plot3d.primitives.Point;
 import org.jzy3d.plot3d.primitives.Polygon;
 import org.jzy3d.plot3d.primitives.Shape;
 import org.matheclipse.core.expression.ComplexNum;
-import org.matheclipse.core.interfaces.IComplexNum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,14 +15,17 @@ public class RiemannSphere implements MathSurface{
     private int rez;
     private Shape shape;
     private boolean showWireframe;
+    private String map;
+    private static final double MAX_RADIUS = 100.0;
 
-    public RiemannSphere (double size, int rez) {
-        shape = buildShape(size, rez);
+    public RiemannSphere (String map, double size, int rez) {
+        shape = buildShape(map, size, rez);
+        this.map = map;
         this.size = size;
         this.rez = rez;
     }
 
-    private static Shape buildShape(double size, int rez) throws RuntimeException {
+    private static Shape buildShape(String map, double size, int rez) throws RuntimeException {
         if (size < 0 || size > 100)
             throw new RuntimeException("Size must be between 0 and 100!");
 
@@ -44,10 +46,10 @@ public class RiemannSphere implements MathSurface{
 
                 // Build colored quadrilateral
                 Polygon quad = new Polygon();
-                quad.add(createColoredPoint(theta0, phi0));
-                quad.add(createColoredPoint(theta1, phi0));
-                quad.add(createColoredPoint(theta1, phi1));
-                quad.add(createColoredPoint(theta0, phi1));
+                quad.add(createColoredPoint(map, theta0, phi0));
+                quad.add(createColoredPoint(map, theta1, phi0));
+                quad.add(createColoredPoint(map, theta1, phi1));
+                quad.add(createColoredPoint(map, theta0, phi1));
                 quad.setWireframeColor(Color.WHITE);
 
                 polygons.add(quad);
@@ -57,18 +59,23 @@ public class RiemannSphere implements MathSurface{
         return new Shape(polygons);
     }
 
-    private static Point createColoredPoint(double theta, double phi) {
+    private static Point createColoredPoint(String map, double theta, double phi) {
         // Build Cartesian coordinates
         double x = Math.sin(phi) * Math.cos(theta);
         double y = Math.sin(phi) * Math.sin(theta);
         double z = -Math.cos(phi);
         Coord3d coord = new Coord3d(x, y, z);
 
-        double real = Math.tan(phi / 2.0) * Math.cos(theta);
-        double imag = Math.tan(phi / 2.0) * Math.sin(theta);
-        // Find the appropriate color
-        IComplexNum w = ComplexNum.valueOf(real,imag).exp();
+        // Sometimes phi > PI, making the radius negative
+        double radius = Math.tan(phi / 2.0);
+        // And a radius too big will throw exceptions to the evaluator
+        if (radius > MAX_RADIUS || radius < 0) radius = MAX_RADIUS;
 
+        // Get the corresponding number on the complex plane
+        ComplexNum w = ComplexNum.valueOf(radius * Math.cos(theta),radius * Math.sin(theta));
+
+        // Map it to its corresponding value TODO: Fix the doc. listener in EditorPanel Clean up ComplexLatexInterpreter
+        w = w.exp(); // ComplexLatexInterpreter.evaluate(map, w);
         return new Point(coord, Painter.getColorForValue(w));
     }
 
@@ -126,15 +133,21 @@ public class RiemannSphere implements MathSurface{
     }
 
     @Override
+    public String getMap() {
+        return map;
+    }
+
+    @Override
     public Shape getShape() {
         return shape;
     }
 
     @Override
-    public void update(double size, int rez) {
+    public void update(String map, double size, int rez) {
         this.size = size;
         this.rez = rez;
-        shape = buildShape(size, rez);
+        this.map = map;
+        shape = buildShape(map, size, rez);
         shape.setWireframeDisplayed(showWireframe);
     }
 
