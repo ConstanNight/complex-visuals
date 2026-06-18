@@ -1,11 +1,11 @@
 package org.example.GUI;
 
 import org.example.AppWindow;
+import org.example.LaTeX.LaTeXRenderer;
+import org.example.LaTeX.LaTeXUpdater;
 import org.example.math.Analysis;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 
 public class EditorPanel extends TranslucentPanel {
@@ -32,7 +32,7 @@ public class EditorPanel extends TranslucentPanel {
         DragFunct.makeDraggable(this, title);
 
         // Build the text area
-        textArea = new JTextArea("\\exp{z}");
+        textArea = new JTextArea(a.getLaTeX());
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         textArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
@@ -53,25 +53,16 @@ public class EditorPanel extends TranslucentPanel {
 
         add(splitPane, BorderLayout.CENTER);
 
-        // Add Document Listener
-        textArea.getDocument().addDocumentListener(new LatexRenderer(textArea, previewArea));
+        // Add Document Listeners
+        textArea.getDocument().addDocumentListener(new LaTeXRenderer(this));
+        textArea.getDocument().addDocumentListener(new LaTeXUpdater(a,this));
+    }
 
-        // TODO: Update only for valid previews, otherwise the lag is unendurable
-        textArea.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                a.updateMap(textArea.getText());
-            }
+    public JTextArea getTextArea() {
+        return textArea;
+    }
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                a.updateMap(textArea.getText());
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                a.updateMap(textArea.getText());
-            }
-        });
+    public JLabel getPreviewArea() {
+        return previewArea;
     }
 }

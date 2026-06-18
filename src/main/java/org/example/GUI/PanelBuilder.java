@@ -7,9 +7,11 @@ import javax.swing.*;
 import java.awt.*;
 
 public class PanelBuilder{
+    private final static String DEFAULT_LATEX = "\\frac{1+\\exp{3z}}{1-\\exp{3z}}";
+
     public static JLayeredPane buildLayeredPane() {
         // Riemann sphere object
-        Analysis a = new Analysis(ShapeType.SPHERE,"\\exp{z}",100,100);
+        Analysis a = new Analysis(ShapeType.SPHERE,DEFAULT_LATEX,100,100);
         Component canvas = (Component) a.getChart().getCanvas();
 
         // Build Layered Pane

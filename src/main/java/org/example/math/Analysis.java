@@ -1,5 +1,6 @@
 package org.example.math;
 
+import org.example.LaTeX.LaTeXTranslator;
 import org.jzy3d.chart.Chart;
 import org.jzy3d.chart.factories.AWTChartFactory;
 import org.jzy3d.plot3d.rendering.view.modes.ViewBoundMode;
@@ -11,11 +12,12 @@ import java.awt.event.MouseWheelListener;
 public class Analysis {
     private Chart chart;
     private MathSurface currentSurface;
+    private String latexString;
 
-    public Analysis(ShapeType shape, String map, double size, int rez) {
-
+    public Analysis(ShapeType shape, String latexString, double size, int rez) {
+        this.latexString = latexString;
         currentSurface = switch (shape) {
-            case SPHERE -> new RiemannSphere(map, size, rez);
+            case SPHERE -> new RiemannSphere(LaTeXTranslator.translateLaTeX(latexString), size, rez);
             default -> null; // This should never happen!
         };
 
@@ -49,8 +51,9 @@ public class Analysis {
         chart.render();
     }
 
-    public void updateMap(String map) {
-        update(map, currentSurface.getSize(), currentSurface.getResolution());
+    public void updateLaTeX(String latexString) {
+        this.latexString = latexString;
+        update(LaTeXTranslator.translateLaTeX(latexString), currentSurface.getSize(), currentSurface.getResolution());
     }
 
     public void updateResolution(int subDivisions) {
@@ -87,5 +90,8 @@ public class Analysis {
     }
     public MathSurface getSurface() {
         return currentSurface;
+    }
+    public String getLaTeX() {
+        return latexString;
     }
 }

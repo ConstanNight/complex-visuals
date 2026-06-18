@@ -1,11 +1,13 @@
 package org.example.math;
 
+import org.example.LaTeX.SymjaEvaluator;
 import org.jzy3d.colors.Color;
 import org.jzy3d.maths.Coord3d;
 import org.jzy3d.plot3d.primitives.Point;
 import org.jzy3d.plot3d.primitives.Polygon;
 import org.jzy3d.plot3d.primitives.Shape;
 import org.matheclipse.core.expression.ComplexNum;
+import org.matheclipse.core.interfaces.IComplexNum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,10 +74,10 @@ public class RiemannSphere implements MathSurface{
         if (radius > MAX_RADIUS || radius < 0) radius = MAX_RADIUS;
 
         // Get the corresponding number on the complex plane
-        ComplexNum w = ComplexNum.valueOf(radius * Math.cos(theta),radius * Math.sin(theta));
+        IComplexNum w = ComplexNum.valueOf(radius * Math.cos(theta),radius * Math.sin(theta));
 
-        // Map it to its corresponding value TODO: Fix the doc. listener in EditorPanel Clean up ComplexLatexInterpreter
-        w = w.exp(); // ComplexLatexInterpreter.evaluate(map, w);
+        // Map it to its corresponding value
+        w = SymjaEvaluator.eval(map, w);
         return new Point(coord, Painter.getColorForValue(w));
     }
 

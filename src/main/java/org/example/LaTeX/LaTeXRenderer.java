@@ -1,40 +1,21 @@
-package org.example.GUI;
+package org.example.LaTeX;
 
+import org.example.GUI.EditorListener;
+import org.example.GUI.EditorPanel;
 import org.scilab.forge.jlatexmath.*;
 
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 
-public class LatexRenderer implements DocumentListener {
+public class LaTeXRenderer extends EditorListener {
 
-    private JTextArea inputArea;
-    private JLabel previewArea;
-
-    public LatexRenderer(JTextArea inputArea, JLabel previewArea) {
-        this.inputArea = inputArea;
-        this.previewArea = previewArea;
-        updatePreview();
+    public LaTeXRenderer(EditorPanel ep) {
+        super(ep);
+        update();
     }
 
     @Override
-    public void insertUpdate(DocumentEvent e) {
-        updatePreview();
-    }
-
-    @Override
-    public void removeUpdate(DocumentEvent e) {
-        updatePreview();
-    }
-
-    @Override
-    public void changedUpdate(DocumentEvent e) {
-        updatePreview();
-    }
-
-    private void updatePreview() {
-        String latex = inputArea.getText();
+    protected void update() {
+        String latex = textArea.getText();
 
         try {
             // Check for empty string

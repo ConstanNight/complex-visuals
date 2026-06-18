@@ -12,6 +12,9 @@
         <Logger name="com.jogamp" level="ERROR" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
+        <Logger name="org.example.LaTeX" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
 
         <Root level="INFO">
             <AppenderRef ref="Console"/>
