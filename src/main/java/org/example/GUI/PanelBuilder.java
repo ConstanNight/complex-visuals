@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class PanelBuilder{
-    private final static String DEFAULT_LATEX = "\\frac{1+\\exp{3z}}{1-\\exp{3z}}";
+    private final static String DEFAULT_LATEX = "\\frac{\\exp{z}-1}{z}";
 
     public static JLayeredPane buildLayeredPane() {
         // Riemann sphere object

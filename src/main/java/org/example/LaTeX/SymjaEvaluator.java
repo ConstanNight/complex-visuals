@@ -32,6 +32,8 @@ public class SymjaEvaluator {
             return ComplexNum.valueOf(result.evalf(), 0.0);
         else if (result.isDirectedInfinity() || result.isInfinity())
             return ComplexNum.INF;
+        else if (result.isIndeterminate())
+            return eval(map, ComplexNum.valueOf(0.001).add(z));
         else
             throw new InputMismatchException("Result could not be resolved to a numeric value.");
     }
